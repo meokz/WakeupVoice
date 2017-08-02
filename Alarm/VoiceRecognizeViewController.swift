@@ -27,6 +27,8 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     
     @IBOutlet var recordButton : UIButton!
     
+    private var ohayo = false
+    
     // MARK: UIViewController
     
     public override func viewDidLoad() {
@@ -92,8 +94,18 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             var isFinal = false
             
             if let result = result {
-                self.textView.text = result.bestTranscription.formattedString
+                let voice =  result.bestTranscription.formattedString
+                self.textView.text = voice
                 isFinal = result.isFinal
+                
+                if voice == "おはよう" {
+                    self.audioEngine.stop()
+                    self.recognitionRequest?.endAudio()
+                    self.recordButton.isEnabled = false
+                    self.recordButton.setTitle("中止しています", for: .disabled)
+                    self.ohayo = true
+                }
+                
             }
             
             if error != nil || isFinal {
@@ -104,7 +116,11 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 self.recognitionTask = nil
                 
                 self.recordButton.isEnabled = true
-                self.recordButton.setTitle("認識開始", for: [])
+                if self.ohayo {
+                    self.recordButton.setTitle("\"おはよう\"といいました", for: [])
+                } else {
+                    self.recordButton.setTitle("認識開始", for: [])
+                }
             }
         }
         
@@ -139,10 +155,10 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             audioEngine.stop()
             recognitionRequest?.endAudio()
             recordButton.isEnabled = false
-            recordButton.setTitle("中止します", for: .disabled)
+            recordButton.setTitle("中止しています", for: .disabled)
         } else {
             try! startRecording()
-            recordButton.setTitle("認識を中止します", for: [])
+            recordButton.setTitle("認識中止", for: [])
         }
     }
 }
