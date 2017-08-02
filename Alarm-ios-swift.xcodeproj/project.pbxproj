@@ -262,7 +262,7 @@
 				TargetAttributes = {
 					9EED786B1AA0F03F00961BC2 = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = S4KTQ3RW3D;
+						DevelopmentTeam = EHYPNKJST4;
 						LastSwiftMigration = 0810;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -472,11 +472,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = S4KTQ3RW3D;
+				DEVELOPMENT_TEAM = EHYPNKJST4;
 				INFOPLIST_FILE = Alarm/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.empit.voice;
+				PRODUCT_BUNDLE_IDENTIFIER = com.enpit.voice;
 				PRODUCT_NAME = "Alarm-ios-swift";
 				SWIFT_VERSION = 3.0;
 			};
@@ -486,11 +486,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = S4KTQ3RW3D;
+				DEVELOPMENT_TEAM = EHYPNKJST4;
 				INFOPLIST_FILE = Alarm/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.empit.voice;
+				PRODUCT_BUNDLE_IDENTIFIER = com.enpit.voice;
 				PRODUCT_NAME = "Alarm-ios-swift";
 				SWIFT_VERSION = 3.0;
 			};
