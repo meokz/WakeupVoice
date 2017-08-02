@@ -104,7 +104,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 self.recognitionTask = nil
                 
                 self.recordButton.isEnabled = true
-                self.recordButton.setTitle("Start Recording", for: [])
+                self.recordButton.setTitle("認識開始", for: [])
             }
         }
         
@@ -117,7 +117,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         
         try audioEngine.start()
         
-        textView.text = "(Go ahead, I'm listening)"
+        textView.text = "(認識中...)"
     }
     
     // MARK: SFSpeechRecognizerDelegate
@@ -125,10 +125,10 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         if available {
             recordButton.isEnabled = true
-            recordButton.setTitle("Start Recording", for: [])
+            recordButton.setTitle("認識開始", for: [])
         } else {
             recordButton.isEnabled = false
-            recordButton.setTitle("Recognition not available", for: .disabled)
+            recordButton.setTitle("認識できません", for: .disabled)
         }
     }
     
@@ -139,10 +139,10 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             audioEngine.stop()
             recognitionRequest?.endAudio()
             recordButton.isEnabled = false
-            recordButton.setTitle("Stopping", for: .disabled)
+            recordButton.setTitle("中止します", for: .disabled)
         } else {
             try! startRecording()
-            recordButton.setTitle("Stop recording", for: [])
+            recordButton.setTitle("認識を中止します", for: [])
         }
     }
 }
