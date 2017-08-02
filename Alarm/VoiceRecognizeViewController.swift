@@ -27,7 +27,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     
     @IBOutlet var recordButton : UIButton!
     
-    private var ohayo = false
+    private var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
     
     // MARK: UIViewController
     
@@ -98,12 +98,12 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 self.textView.text = voice
                 isFinal = result.isFinal
                 
-                if voice == "おはよう" {
+                if voice == self.voiceRecognize.speechText {
                     self.audioEngine.stop()
                     self.recognitionRequest?.endAudio()
                     self.recordButton.isEnabled = false
                     self.recordButton.setTitle("中止しています", for: .disabled)
-                    self.ohayo = true
+                    self.voiceRecognize.isRecognized = true
                 }
                 
             }
@@ -114,10 +114,11 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 
                 self.recognitionRequest = nil
                 self.recognitionTask = nil
-                
+     
                 self.recordButton.isEnabled = true
-                if self.ohayo {
-                    self.recordButton.setTitle("\"おはよう\"といいました", for: [])
+                if self.voiceRecognize.isRecognized {
+                    let text = "\"" + self.voiceRecognize.speechText + "\"";
+                    self.recordButton.setTitle(text + "といいました", for: [])
                 } else {
                     self.recordButton.setTitle("認識開始", for: [])
                 }
