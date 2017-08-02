@@ -51,15 +51,15 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                     
                 case .denied:
                     self.recordButton.isEnabled = false
-                    self.recordButton.setTitle("User denied access to speech recognition", for: .disabled)
+                    self.recordButton.setTitle("ユーザが音声認識を許可しませんでした", for: .disabled)
                     
                 case .restricted:
                     self.recordButton.isEnabled = false
-                    self.recordButton.setTitle("Speech recognition restricted on this device", for: .disabled)
+                    self.recordButton.setTitle("このデバイスでの音声認識は制限されています", for: .disabled)
                     
                 case .notDetermined:
                     self.recordButton.isEnabled = false
-                    self.recordButton.setTitle("Speech recognition not yet authorized", for: .disabled)
+                    self.recordButton.setTitle("音声認識はまだ許可されていません", for: .disabled)
                 }
             }
         }
