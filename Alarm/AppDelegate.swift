@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
         return true
     }
    
-    //receive local notification when app in foreground
+    // receive local notification when app in foreground
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         
         //show an alert window
