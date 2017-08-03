@@ -32,41 +32,17 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
 
+        // 時間の設定
         timeDisplay()
         _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timeDisplay), userInfo: nil, repeats: true)
-      
-        // 再生する audio ファイルのパスを取得
-        let audioPath = Bundle.main.path(forResource: "bell", ofType:"mp3")!
-        let audioUrl = URL(fileURLWithPath: audioPath)
         
-        
-        // auido を再生するプレイヤーを作成する
-        var audioError:NSError?
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: audioUrl)
-        } catch let error as NSError {
-            audioError = error
-            audioPlayer = nil
-        }
-        
-        // エラーが起きたとき
-        if let error = audioError {
-            print("Error \(error.localizedDescription)")
-        }
-        
-        audioPlayer.delegate = self
-        audioPlayer.prepareToPlay()
-        audioPlayer.play()
+        playSound()
     }
-
-
+    
     override public func viewDidAppear(_ animated: Bool) {
         speechRecognizer.delegate = self
         
         SFSpeechRecognizer.requestAuthorization { authStatus in
-            /*
-             The callstate.
-             */
             OperationQueue.main.addOperation {
                 switch authStatus {
                 case .authorized:
@@ -89,7 +65,6 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     }
     
     private func startRecording() throws {
-        
         // Cancel the previous task if it's running.
         if let recognitionTask = recognitionTask {
             recognitionTask.cancel()
@@ -157,12 +132,10 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         audioEngine.prepare()
         
         try audioEngine.start()
-        
         textView.text = "(認識中...)"
     }
     
     // MARK: SFSpeechRecognizerDelegate
-    
     public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         if available {
             recordButton.isEnabled = true
@@ -172,20 +145,8 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             recordButton.setTitle("認識できません", for: .disabled)
         }
     }
-    public func timeDisplay(){
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone.ReferenceType.local
-        formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
-        let date  = Date()
-        let datestr = formatter.string(from :date)
-        let  dateComponents = datestr.components(separatedBy: "-")
-        let hour = dateComponents[3]
-        let minute = dateComponents[4]
-        timeLabel.text = hour + ":" + minute
-
-    }
-    // MARK: Interface Builder actions
     
+    // MARK: Interface Builder actions
     @IBAction func recordButtonTapped() {
         if audioEngine.isRunning {
             audioEngine.stop()
@@ -196,6 +157,43 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             try! startRecording()
             recordButton.setTitle("認識中止", for: [])
         }
+    }
+    
+    public func timeDisplay(){
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.ReferenceType.local
+        formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+        let date  = Date()
+        let datestr = formatter.string(from :date)
+        let  dateComponents = datestr.components(separatedBy: "-")
+        let hour = dateComponents[3]
+        let minute = dateComponents[4]
+        timeLabel.text = hour + ":" + minute
+    }
+    
+    
+    func playSound() {
+        // 再生する audio ファイルのパスを取得
+        let audioPath = Bundle.main.path(forResource: "bell", ofType:"mp3")!
+        let audioUrl = URL(fileURLWithPath: audioPath)
+        
+        // auido を再生するプレイヤーを作成する
+        var audioError:NSError?
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: audioUrl)
+        } catch let error as NSError {
+            audioError = error
+            audioPlayer = nil
+        }
+        
+        // エラーが起きたとき
+        if let error = audioError {
+            print("Error \(error.localizedDescription)")
+        }
+        
+        audioPlayer.delegate = self
+        audioPlayer.prepareToPlay()
+        audioPlayer.play()
     }
 
 }
