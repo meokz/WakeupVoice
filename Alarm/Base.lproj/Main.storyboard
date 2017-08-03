@@ -85,7 +85,7 @@
         <!--Voice Recognize View Controller-->
         <scene sceneID="ciZ-zU-oAM">
             <objects>
-                <viewController storyboardIdentifier="VoiceRecognize" id="EX5-Y9-mJb" customClass="VoiceRecognizeViewController" customModule="Alarm_ios_swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="VoiceRecognize" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EX5-Y9-mJb" customClass="VoiceRecognizeViewController" customModule="Alarm_ios_swift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="rnD-R6-gJ3"/>
                         <viewControllerLayoutGuide type="bottom" id="YQw-hy-O4C"/>

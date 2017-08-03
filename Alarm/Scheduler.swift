@@ -1,14 +1,5 @@
-//
-//  Scheduler.swift
-//  Alarm-ios-swift
-//
-//  Created by longyutao on 16/1/15.
-//  Copyright (c) 2016年 LongGames. All rights reserved.
-//
-
 import Foundation
 import UIKit
-
 
 class Scheduler : AlarmSchedulerDelegate
 {
@@ -116,16 +107,18 @@ class Scheduler : AlarmSchedulerDelegate
     }
     
     func setNotificationWithDate(_ date: Date, onWeekdaysForNotify weekdays:[Int], snoozeEnabled:Bool,  onSnooze: Bool, soundName: String, index: Int) {
+        // ローカル通知の設定
         let AlarmNotification: UILocalNotification = UILocalNotification()
-        AlarmNotification.alertBody = "Wake Up!"
+        AlarmNotification.alertBody = "指定時間になりました"
         AlarmNotification.alertAction = "Open App"
         AlarmNotification.category = "myAlarmCategory"
+        // 通知時に指定した音声ファイルを再生する
         AlarmNotification.soundName = soundName + ".mp3"
         AlarmNotification.timeZone = TimeZone.current
         let repeating: Bool = !weekdays.isEmpty
         AlarmNotification.userInfo = ["snooze" : snoozeEnabled, "index": index, "soundName": soundName, "repeating" : repeating]
-        //repeat weekly if repeat weekdays are selected
-        //no repeat with snooze notification
+        // 指定時間に毎週鳴らすか
+        // no repeat with snooze notification
         if !weekdays.isEmpty && !onSnooze{
             AlarmNotification.repeatInterval = NSCalendar.Unit.weekOfYear
         }
@@ -143,8 +136,8 @@ class Scheduler : AlarmSchedulerDelegate
             AlarmNotification.fireDate = d
             UIApplication.shared.scheduleLocalNotification(AlarmNotification)
         }
-        setupNotificationSettings()
         
+        setupNotificationSettings()
     }
     
     func setNotificationForSnooze(snoozeMinute: Int, soundName: String, index: Int) {
