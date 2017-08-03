@@ -42,36 +42,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
             index = userInfo["index"] as! Int
         }
         
-        // 通知を押すと音が消えるので，画面を開いたときに再度音を鳴らす
-        playSound(soundName)
-        
-        // スヌーズを押したときの処理
-        let snoozeOption = UIAlertAction(title: "スヌーズ", style: .default) {
-            (action:UIAlertAction)->Void in self.audioPlayer?.stop()
-            
-            self.alarmScheduler.setNotificationForSnooze(snoozeMinute: 9, soundName: soundName, index: index)
-        }
-        
-        // OKを押したときの処理
-        let stopOption = UIAlertAction(title: "OK", style: .default) {
-            (action:UIAlertAction)->Void in self.audioPlayer?.stop()
-            
-            AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate)
-            self.alarmModel = Alarms()
-            self.alarmModel.alarms[index].onSnooze = false
-            
-            // アプリがフォアグランドでMainAlarmViewを開いていたらスイッチをオフにする
-            let mainVC = self.window?.visibleViewController as? MainAlarmViewController
-            if mainVC != nil {
-                mainVC!.changeSwitchButtonState(index: index)
-            }
-        }
-        
-        let storageController = UIAlertController(title: "アラーム", message: nil, preferredStyle: .alert)
-        if isSnooze {
-            storageController.addAction(snoozeOption)
-        }
-        storageController.addAction(stopOption)
+//        // 通知を押すと音が消えるので，画面を開いたときに再度音を鳴らす
+//        playSound(soundName)
+//        
+//        // スヌーズを押したときの処理
+//        let snoozeOption = UIAlertAction(title: "Snooze", style: .default) {
+//            (action:UIAlertAction)->Void in self.audioPlayer?.stop()
+//            
+//            self.alarmScheduler.setNotificationForSnooze(snoozeMinute: 9, soundName: soundName, index: index)
+//        }
+//        
+//        // OKを押したときの処理
+//        let stopOption = UIAlertAction(title: "OK", style: .default) {
+//            (action:UIAlertAction)->Void in self.audioPlayer?.stop()
+//            
+//            AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate)
+//            self.alarmModel = Alarms()
+//            self.alarmModel.alarms[index].onSnooze = false
+//            
+//            // アプリがフォアグランドでMainAlarmViewを開いていたらスイッチをオフにする
+//            let mainVC = self.window?.visibleViewController as? MainAlarmViewController
+//            if mainVC != nil {
+//                mainVC!.changeSwitchButtonState(index: index)
+//            }
+//        }
+//        
+//        let storageController = UIAlertController(title: "Alarm", message: nil, preferredStyle: .alert)
+//        if isSnooze {
+//            storageController.addAction(snoozeOption)
+//        }
+//        storageController.addAction(stopOption)
         
         // 音声認識画面を開く
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
