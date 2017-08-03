@@ -89,23 +89,23 @@ class AlarmAddEditViewController: UIViewController, UITableViewDelegate, UITable
             
             if indexPath.row == 0 {
                 
-                cell!.textLabel!.text = "Repeat"
+                cell!.textLabel!.text = "繰り返し"
                 cell!.detailTextLabel!.text = WeekdaysViewController.repeatText(weekdays: segueInfo.repeatWeekdays)
                 cell!.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             }
             else if indexPath.row == 1 {
-                cell!.textLabel!.text = "Label"
+                cell!.textLabel!.text = "ラベル"
                 cell!.detailTextLabel!.text = segueInfo.label
                 cell!.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             }
             else if indexPath.row == 2 {
-                cell!.textLabel!.text = "Sound"
+                cell!.textLabel!.text = "サウンド"
                 cell!.detailTextLabel!.text = segueInfo.mediaLabel
                 cell!.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             }
             else if indexPath.row == 3 {
                
-                cell!.textLabel!.text = "Snooze"
+                cell!.textLabel!.text = "スヌーズ"
                 let sw = UISwitch(frame: CGRect())
                 sw.addTarget(self, action: #selector(AlarmAddEditViewController.snoozeSwitchTapped(_:)), for: UIControlEvents.touchUpInside)
                 
@@ -119,7 +119,7 @@ class AlarmAddEditViewController: UIViewController, UITableViewDelegate, UITable
         else if indexPath.section == 1 {
             cell = UITableViewCell(
                 style: UITableViewCellStyle.default, reuseIdentifier: Id.settingIdentifier)
-            cell!.textLabel!.text = "Delete Alarm"
+            cell!.textLabel!.text = "削除"
             cell!.textLabel!.textAlignment = .center
             cell!.textLabel!.textColor = UIColor.red
         }

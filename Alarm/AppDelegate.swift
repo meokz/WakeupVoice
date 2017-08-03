@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
         playSound(soundName)
         
         // スヌーズを押したときの処理
-        let snoozeOption = UIAlertAction(title: "Snooze", style: .default) {
+        let snoozeOption = UIAlertAction(title: "スヌーズ", style: .default) {
             (action:UIAlertAction)->Void in self.audioPlayer?.stop()
             
             self.alarmScheduler.setNotificationForSnooze(snoozeMinute: 9, soundName: soundName, index: index)
@@ -67,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
             }
         }
         
-        let storageController = UIAlertController(title: "Alarm", message: nil, preferredStyle: .alert)
+        let storageController = UIAlertController(title: "アラーム", message: nil, preferredStyle: .alert)
         if isSnooze {
             storageController.addAction(snoozeOption)
         }
