@@ -12,6 +12,7 @@ import Foundation
 import UIKit
 import Speech
 
+
 public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizerDelegate {
     // MARK: Properties
     
@@ -27,6 +28,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     
     @IBOutlet var recordButton : UIButton!
     
+    @IBOutlet weak var timeLabel: UILabel!
     private var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
     
     // MARK: UIViewController
@@ -36,15 +38,17 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
+        timeDisplay()
+        _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timeDisplay), userInfo: nil, repeats: true)
     }
-    
+
+
     override public func viewDidAppear(_ animated: Bool) {
         speechRecognizer.delegate = self
         
         SFSpeechRecognizer.requestAuthorization { authStatus in
             /*
-             The callback may not be called on the main thread. Add an
-             operation to the main queue to update the record button's state.
+             The callstate.
              */
             OperationQueue.main.addOperation {
                 switch authStatus {
@@ -148,7 +152,18 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             recordButton.setTitle("認識できません", for: .disabled)
         }
     }
-    
+    public func timeDisplay(){
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.ReferenceType.local
+        formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+        let date  = Date()
+        let datestr = formatter.string(from :date)
+        let  dateComponents = datestr.components(separatedBy: "-")
+        let hour = dateComponents[3]
+        let minute = dateComponents[4]
+        timeLabel.text = hour + ":" + minute
+
+    }
     // MARK: Interface Builder actions
     
     @IBAction func recordButtonTapped() {
