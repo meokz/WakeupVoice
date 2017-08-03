@@ -112,6 +112,7 @@ class Scheduler : AlarmSchedulerDelegate
         AlarmNotification.alertBody = "指定時間になりました"
         AlarmNotification.alertAction = "Open App"
         AlarmNotification.category = "myAlarmCategory"
+        // 通知時に指定した音声ファイルを再生する
         AlarmNotification.soundName = soundName + ".mp3"
         AlarmNotification.timeZone = TimeZone.current
         let repeating: Bool = !weekdays.isEmpty
@@ -135,8 +136,8 @@ class Scheduler : AlarmSchedulerDelegate
             AlarmNotification.fireDate = d
             UIApplication.shared.scheduleLocalNotification(AlarmNotification)
         }
-        setupNotificationSettings()
         
+        setupNotificationSettings()
     }
     
     func setNotificationForSnooze(snoozeMinute: Int, soundName: String, index: Int) {

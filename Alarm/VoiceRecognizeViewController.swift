@@ -1,13 +1,4 @@
-/*
- Copyright (C) 2016 Apple Inc. All Rights Reserved.
- See LIBRARY for this sample’s licensing information
- 
- Abstract:
- The primary view controller. The speach-to-text engine is managed an configured here.
- */
-
 import Foundation
-
 
 import UIKit
 import Speech

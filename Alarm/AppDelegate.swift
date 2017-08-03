@@ -33,8 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
     // ローカル通知の受信
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         
-        // アラート画面の表示
-        let storageController = UIAlertController(title: "Alarm", message: nil, preferredStyle: .alert)
         var isSnooze: Bool = false
         var soundName: String = ""
         var index: Int = -1
@@ -44,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
             index = userInfo["index"] as! Int
         }
         
-        // 音を鳴らす
+        // 通知を押すと音が消えるので，画面を開いたときに再度音を鳴らす
         playSound(soundName)
         
         // スヌーズを押したときの処理
@@ -62,20 +60,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
             self.alarmModel = Alarms()
             self.alarmModel.alarms[index].onSnooze = false
             
-            // アプリがフォアグランドでMainAlarmViewを開いていたら
-            // スイッチをオフにするを変える
+            // アプリがフォアグランドでMainAlarmViewを開いていたらスイッチをオフにする
             let mainVC = self.window?.visibleViewController as? MainAlarmViewController
             if mainVC != nil {
                 mainVC!.changeSwitchButtonState(index: index)
             }
         }
         
+        let storageController = UIAlertController(title: "Alarm", message: nil, preferredStyle: .alert)
         if isSnooze {
             storageController.addAction(snoozeOption)
         }
         storageController.addAction(stopOption)
         
-        window?.visibleViewController?.navigationController?.present(storageController, animated: true, completion: nil)
+        // 音声認識画面を開く
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let recognizeVC = storyboard.instantiateViewController(withIdentifier: "VoiceRecognize") as? VoiceRecognizeViewController
+        self.window?.rootViewController?.present(recognizeVC!, animated: true, completion: nil)
+        
+        // アプリがフォアグランドならアラート画面を表示
+//        window?.visibleViewController?.navigationController?.present(storageController, animated: true, completion: nil)
     }
     
     //snooze notification handler when app in background
