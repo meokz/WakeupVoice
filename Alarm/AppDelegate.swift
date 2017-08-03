@@ -1,11 +1,3 @@
-//
-//  AppDelegate.swift
-//  WeatherAlarm
-//
-//  Created by longyutao on 15-2-28.
-//  Copyright (c) 2015年 LongGames. All rights reserved.
-//
-
 import UIKit
 import Foundation
 import AudioToolbox
@@ -38,10 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
         return true
     }
    
-    // receive local notification when app in foreground
+    // ローカル通知の受信
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         
-        //show an alert window
+        // アラート画面の表示
         let storageController = UIAlertController(title: "Alarm", message: nil, preferredStyle: .alert)
         var isSnooze: Bool = false
         var soundName: String = ""
@@ -52,21 +44,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
             index = userInfo["index"] as! Int
         }
         
+        // 音を鳴らす
         playSound(soundName)
-        //schedule notification for snooze
-        if isSnooze {
-            let snoozeOption = UIAlertAction(title: "Snooze", style: .default) {
-                (action:UIAlertAction)->Void in self.audioPlayer?.stop()
-                self.alarmScheduler.setNotificationForSnooze(snoozeMinute: 9, soundName: soundName, index: index)
-            }
-            storageController.addAction(snoozeOption)
+        
+        // スヌーズを押したときの処理
+        let snoozeOption = UIAlertAction(title: "Snooze", style: .default) {
+            (action:UIAlertAction)->Void in self.audioPlayer?.stop()
+            
+            self.alarmScheduler.setNotificationForSnooze(snoozeMinute: 9, soundName: soundName, index: index)
         }
+        
+        // OKを押したときの処理
         let stopOption = UIAlertAction(title: "OK", style: .default) {
             (action:UIAlertAction)->Void in self.audioPlayer?.stop()
+            
             AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate)
             self.alarmModel = Alarms()
             self.alarmModel.alarms[index].onSnooze = false
-            //change UI
+            
+            // UIを変える
             var mainVC = self.window?.visibleViewController as? MainAlarmViewController
             if mainVC == nil {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -75,7 +71,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
             mainVC!.changeSwitchButtonState(index: index)
         }
         
+        if isSnooze {
+            storageController.addAction(snoozeOption)
+        }
         storageController.addAction(stopOption)
+        
         window?.visibleViewController?.navigationController?.present(storageController, animated: true, completion: nil)
     }
     

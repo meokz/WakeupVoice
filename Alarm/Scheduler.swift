@@ -116,6 +116,7 @@ class Scheduler : AlarmSchedulerDelegate
     }
     
     func setNotificationWithDate(_ date: Date, onWeekdaysForNotify weekdays:[Int], snoozeEnabled:Bool,  onSnooze: Bool, soundName: String, index: Int) {
+        // ローカル通知の設定
         let AlarmNotification: UILocalNotification = UILocalNotification()
         AlarmNotification.alertBody = "Wake Up!"
         AlarmNotification.alertAction = "Open App"
