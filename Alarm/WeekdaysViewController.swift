@@ -66,7 +66,7 @@ extension WeekdaysViewController {
         }
         
         if weekdays.isEmpty {
-            return "Never"
+            return "しない"
         }
         
         var ret = String()

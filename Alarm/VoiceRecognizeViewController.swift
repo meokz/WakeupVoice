@@ -1,19 +1,13 @@
-/*
- Copyright (C) 2016 Apple Inc. All Rights Reserved.
- See LIBRARY for this sample’s licensing information
- 
- Abstract:
- The primary view controller. The speach-to-text engine is managed an configured here.
- */
-
 import Foundation
-
 
 import UIKit
 import Speech
+import AVFoundation
 
-public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizerDelegate {
+public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizerDelegate ,AVAudioPlayerDelegate{
     // MARK: Properties
+    
+    var audioPlayer:AVAudioPlayer!
     
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "ja-JP"))!
     
@@ -27,25 +21,30 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     
     @IBOutlet var recordButton : UIButton!
     
+    @IBOutlet weak var timeLabel: UILabel!
     private var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
     
     // MARK: UIViewController
-    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
+
+        // 時間の設定
+        timeDisplay()
+        _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timeDisplay), userInfo: nil, repeats: true)
+
+        let text = "\"" + self.voiceRecognize.speechText + "\"";
+        self.textView.text = text + "と言ってください"
+      
+        playSound()
     }
     
     override public func viewDidAppear(_ animated: Bool) {
         speechRecognizer.delegate = self
         
         SFSpeechRecognizer.requestAuthorization { authStatus in
-            /*
-             The callback may not be called on the main thread. Add an
-             operation to the main queue to update the record button's state.
-             */
             OperationQueue.main.addOperation {
                 switch authStatus {
                 case .authorized:
@@ -68,7 +67,6 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     }
     
     private func startRecording() throws {
-        
         // Cancel the previous task if it's running.
         if let recognitionTask = recognitionTask {
             recognitionTask.cancel()
@@ -118,9 +116,14 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 self.recordButton.isEnabled = true
                 if self.voiceRecognize.isRecognized {
                     let text = "\"" + self.voiceRecognize.speechText + "\"";
-                    self.recordButton.setTitle(text + "といいました", for: [])
+
+                    self.textView.text = text  + "と言いました"
+                    self.recordButton.isEnabled = false
+
                 } else {
                     self.recordButton.setTitle("認識開始", for: [])
+                    let text = "\"" + self.voiceRecognize.speechText + "\"";
+                    self.textView.text = text  + "と言ってください"
                 }
             }
         }
@@ -133,12 +136,10 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         audioEngine.prepare()
         
         try audioEngine.start()
-        
         textView.text = "(認識中...)"
     }
     
     // MARK: SFSpeechRecognizerDelegate
-    
     public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         if available {
             recordButton.isEnabled = true
@@ -150,7 +151,6 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     }
     
     // MARK: Interface Builder actions
-    
     @IBAction func recordButtonTapped() {
         if audioEngine.isRunning {
             audioEngine.stop()
@@ -162,5 +162,42 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             recordButton.setTitle("認識中止", for: [])
         }
     }
-}
+    
+    public func timeDisplay(){
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.ReferenceType.local
+        formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+        let date  = Date()
+        let datestr = formatter.string(from :date)
+        let  dateComponents = datestr.components(separatedBy: "-")
+        let hour = dateComponents[3]
+        let minute = dateComponents[4]
+        timeLabel.text = hour + ":" + minute
+    }
+    
+    
+    func playSound() {
+        // 再生する audio ファイルのパスを取得
+        let audioPath = Bundle.main.path(forResource: "bell", ofType:"mp3")!
+        let audioUrl = URL(fileURLWithPath: audioPath)
+        
+        // auido を再生するプレイヤーを作成する
+        var audioError:NSError?
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: audioUrl)
+        } catch let error as NSError {
+            audioError = error
+            audioPlayer = nil
+        }
+        
+        // エラーが起きたとき
+        if let error = audioError {
+            print("Error \(error.localizedDescription)")
+        }
+        
+        audioPlayer.delegate = self
+        audioPlayer.prepareToPlay()
+        audioPlayer.play()
+    }
 
+}

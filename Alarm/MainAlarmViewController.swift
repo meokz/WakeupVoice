@@ -150,11 +150,11 @@ class MainAlarmViewController: UITableViewController{
         let dist = segue.destination as! UINavigationController
         let addEditController = dist.topViewController as! AlarmAddEditViewController
         if segue.identifier == Id.addSegueIdentifier {
-            addEditController.navigationItem.title = "Add Alarm"
-            addEditController.segueInfo = SegueInfo(curCellIndex: alarmModel.count, isEditMode: false, label: "Alarm", mediaLabel: "bell", mediaID: "", repeatWeekdays: [], enabled: false, snoozeEnabled: false)
+            addEditController.navigationItem.title = "アラームを追加"
+            addEditController.segueInfo = SegueInfo(curCellIndex: alarmModel.count, isEditMode: false, label: "アラーム", mediaLabel: "bell", mediaID: "", repeatWeekdays: [], enabled: false, snoozeEnabled: false)
         }
         else if segue.identifier == Id.editSegueIdentifier {
-            addEditController.navigationItem.title = "Edit Alarm"
+            addEditController.navigationItem.title = "edit Alarm"
             addEditController.segueInfo = sender as! SegueInfo
         }
     }
