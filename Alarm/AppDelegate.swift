@@ -62,13 +62,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
             self.alarmModel = Alarms()
             self.alarmModel.alarms[index].onSnooze = false
             
-            // UIを変える
-            var mainVC = self.window?.visibleViewController as? MainAlarmViewController
-            if mainVC == nil {
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                mainVC = storyboard.instantiateViewController(withIdentifier: "Alarm") as? MainAlarmViewController
+            // アプリがフォアグランドでMainAlarmViewを開いていたら
+            // スイッチをオフにするを変える
+            let mainVC = self.window?.visibleViewController as? MainAlarmViewController
+            if mainVC != nil {
+                mainVC!.changeSwitchButtonState(index: index)
             }
-            mainVC!.changeSwitchButtonState(index: index)
         }
         
         if isSnooze {
