@@ -25,7 +25,6 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     private var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
     
     // MARK: UIViewController
-    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,7 +34,10 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         // 時間の設定
         timeDisplay()
         _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timeDisplay), userInfo: nil, repeats: true)
-        
+
+        let text = "\"" + self.voiceRecognize.speechText + "\"";
+        self.textView.text = text + "と言ってください"
+      
         playSound()
     }
     
@@ -114,12 +116,14 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 self.recordButton.isEnabled = true
                 if self.voiceRecognize.isRecognized {
                     let text = "\"" + self.voiceRecognize.speechText + "\"";
-                    self.recordButton.setTitle(text + "といいました", for: [])
-                    
-                    //バグ
-                    self.audioPlayer.stop()
+
+                    self.textView.text = text  + "と言いました"
+                    self.recordButton.isEnabled = false
+
                 } else {
                     self.recordButton.setTitle("認識開始", for: [])
+                    let text = "\"" + self.voiceRecognize.speechText + "\"";
+                    self.textView.text = text  + "と言ってください"
                 }
             }
         }
