@@ -11,9 +11,12 @@ import Foundation
 
 import UIKit
 import Speech
+import AVFoundation
 
-public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizerDelegate {
+public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizerDelegate ,AVAudioPlayerDelegate{
     // MARK: Properties
+    
+    var audioPlayer:AVAudioPlayer!
     
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "ja-JP"))!
     
@@ -36,6 +39,28 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
+        // 再生する audio ファイルのパスを取得
+        let audioPath = Bundle.main.path(forResource: "bell", ofType:"mp3")!
+        let audioUrl = URL(fileURLWithPath: audioPath)
+        
+        
+        // auido を再生するプレイヤーを作成する
+        var audioError:NSError?
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: audioUrl)
+        } catch let error as NSError {
+            audioError = error
+            audioPlayer = nil
+        }
+        
+        // エラーが起きたとき
+        if let error = audioError {
+            print("Error \(error.localizedDescription)")
+        }
+        
+        audioPlayer.delegate = self
+        audioPlayer.prepareToPlay()
+        audioPlayer.play()
     }
     
     override public func viewDidAppear(_ animated: Bool) {
@@ -119,6 +144,9 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 if self.voiceRecognize.isRecognized {
                     let text = "\"" + self.voiceRecognize.speechText + "\"";
                     self.recordButton.setTitle(text + "といいました", for: [])
+                    
+                    //バグ
+                    self.audioPlayer.stop()
                 } else {
                     self.recordButton.setTitle("認識開始", for: [])
                 }
@@ -162,5 +190,5 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             recordButton.setTitle("認識中止", for: [])
         }
     }
-}
 
+}
