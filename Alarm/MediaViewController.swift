@@ -88,16 +88,16 @@ class MediaViewController: UITableViewController, MPMediaPickerControllerDelegat
         }
         if indexPath.section == 0 {
             if indexPath.row == 0 {
-                cell!.textLabel!.text = "Buy More Tones"
+                cell!.textLabel!.text = "通知音を追加購入"
             }
         }
         else if indexPath.section == 1 {
-            cell!.textLabel!.text = "Vibration"
+            cell!.textLabel!.text = "バイブレーション"
             cell!.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         }
         else if indexPath.section == 2 {
             if indexPath.row == 0 {
-                cell!.textLabel!.text = "Pick a song"
+                cell!.textLabel!.text = "曲を選択"
                 cell!.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             }
         }
