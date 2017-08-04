@@ -3,36 +3,31 @@ import Foundation
 import UIKit
 import Speech
 import AVFoundation
+import Pulsator
 
 public class VoiceRecognizeViewController : UIViewController,
     SFSpeechRecognizerDelegate ,AVAudioPlayerDelegate {
     
-    
-    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "ja-JP"))!
-
-    private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
-    
-    private var recognitionTask: SFSpeechRecognitionTask?
-    
-    private let audioEngine = AVAudioEngine()
-    
-    //@IBOutlet var textView : UITextView!
-    
     @IBOutlet weak var  textView: UILabel!
-    
     @IBOutlet var recordButton : UIButton!
-    
     @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var sourceView: UIImageView!
+    
+    let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "ja-JP"))!
+    var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    var recognitionTask: SFSpeechRecognitionTask?
+    let audioEngine = AVAudioEngine()
     
     let checkButtonImage :UIImage? = UIImage(named:"check.png")
 
-    private var audioPlayer:AVAudioPlayer!
+    var audioPlayer:AVAudioPlayer!
     
     var vol = 1.0
     
     private var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
-    
-    // MARK: UIViewController
+
+    let pulsator = Pulsator()
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,6 +42,9 @@ public class VoiceRecognizeViewController : UIViewController,
         self.textView.text = text + "\nと言ってください"
         self.textView.numberOfLines = 2
         playSound()
+        
+        sourceView.layer.superlayer?.insertSublayer(pulsator, below: sourceView.layer)
+        pulsator.start()
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -71,8 +69,12 @@ public class VoiceRecognizeViewController : UIViewController,
         }
     }
 
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.layer.layoutIfNeeded()
+        pulsator.position = sourceView.layer.position
+    }
     
-        
     private func startRecording() throws {
         // 現在のタスクを一旦キャンセル
         if let recognitionTask = recognitionTask {

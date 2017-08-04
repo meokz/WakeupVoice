@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B304E2A1F3440EE00787A03 /* Pulsator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B304E291F3440EE00787A03 /* Pulsator.framework */; };
 		6BCA7DB91F3181BE000B53DC /* VoiceRecognizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCA7DB81F3181BE000B53DC /* VoiceRecognizeViewController.swift */; };
 		6BCA7DBD1F319EDA000B53DC /* VoiceRecognizeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCA7DBC1F319EDA000B53DC /* VoiceRecognizeModel.swift */; };
 		7701B7B31E99414800908B6C /* UIWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7701B7B21E99414800908B6C /* UIWindow+Extension.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6B304E291F3440EE00787A03 /* Pulsator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pulsator.framework; path = Carthage/Build/iOS/Pulsator.framework; sourceTree = "<group>"; };
 		6BCA7DB81F3181BE000B53DC /* VoiceRecognizeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceRecognizeViewController.swift; sourceTree = "<group>"; };
 		6BCA7DBC1F319EDA000B53DC /* VoiceRecognizeModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceRecognizeModel.swift; sourceTree = "<group>"; };
 		7701B7B21E99414800908B6C /* UIWindow+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extension.swift"; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B304E2A1F3440EE00787A03 /* Pulsator.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,6 +101,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B304E281F3440EE00787A03 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6B304E291F3440EE00787A03 /* Pulsator.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		770405701EA09FB2005F9379 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -167,6 +178,7 @@
 				9EED786E1AA0F03F00961BC2 /* Alarm */,
 				9EED78841AA0F03F00961BC2 /* AlarmTests */,
 				9EED786D1AA0F03F00961BC2 /* Products */,
+				6B304E281F3440EE00787A03 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -233,6 +245,7 @@
 				9EED78681AA0F03F00961BC2 /* Sources */,
 				9EED78691AA0F03F00961BC2 /* Frameworks */,
 				9EED786A1AA0F03F00961BC2 /* Resources */,
+				6B304E2D1F34435E00787A03 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -274,7 +287,7 @@
 				TargetAttributes = {
 					9EED786B1AA0F03F00961BC2 = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = EHYPNKJST4;
+						DevelopmentTeam = S4KTQ3RW3D;
 						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -332,6 +345,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6B304E2D1F34435E00787A03 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Pulsator.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/Carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9EED78681AA0F03F00961BC2 /* Sources */ = {
@@ -490,11 +520,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = EHYPNKJST4;
+				DEVELOPMENT_TEAM = S4KTQ3RW3D;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Alarm/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.enpit.voiceo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.enpit.voicea;
 				PRODUCT_NAME = "Alarm-ios-swift";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
@@ -506,11 +540,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = EHYPNKJST4;
+				DEVELOPMENT_TEAM = S4KTQ3RW3D;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Alarm/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.enpit.voiceo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.enpit.voicea;
 				PRODUCT_NAME = "Alarm-ios-swift";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
