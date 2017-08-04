@@ -168,6 +168,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             recordButton.isEnabled = false
             recordButton.setTitle("中止しています", for: .disabled)
         }
+        playSound()
     }
 
     
