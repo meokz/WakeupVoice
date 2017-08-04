@@ -4,13 +4,12 @@ import UIKit
 import Speech
 import AVFoundation
 
-public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizerDelegate ,AVAudioPlayerDelegate{
-    // MARK: Properties
+public class VoiceRecognizeViewController : UIViewController,
+    SFSpeechRecognizerDelegate ,AVAudioPlayerDelegate {
     
-    var audioPlayer:AVAudioPlayer!
     
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "ja-JP"))!
-    
+
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     
     private var recognitionTask: SFSpeechRecognitionTask?
@@ -23,8 +22,9 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     
     @IBOutlet weak var timeLabel: UILabel!
     
-    var vol = 1.0
+    private var audioPlayer:AVAudioPlayer!
     
+    var vol = 1.0
     
     private var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
     
@@ -35,7 +35,6 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
 
-        
         // 時間の設定
         timeDisplay()
         _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timeDisplay), userInfo: nil, repeats: true)
@@ -46,7 +45,6 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         playSound()
     }
 
-
     override public func viewDidAppear(_ animated: Bool) {
         speechRecognizer.delegate = self
         
@@ -55,18 +53,15 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 switch authStatus {
                 case .authorized:
                     self.recordButton.isEnabled = true
-                    
                 case .denied:
                     self.recordButton.isEnabled = false
-                    self.recordButton.setTitle("ユーザが音声認識を許可しませんでした", for: .disabled)
-                    
+//                    self.recordButton.setTitle("ユーザが音声認識を許可しませんでした", for: .disabled)
                 case .restricted:
                     self.recordButton.isEnabled = false
-                    self.recordButton.setTitle("このデバイスでの音声認識は制限されています", for: .disabled)
-                    
+//                    self.recordButton.setTitle("このデバイスでの音声認識は制限されています", for: .disabled)
                 case .notDetermined:
                     self.recordButton.isEnabled = false
-                    self.recordButton.setTitle("音声認識はまだ許可されていません", for: .disabled)
+//                    self.recordButton.setTitle("音声認識はまだ許可されてsいません", for: .disabled)
                 }
             }
         }
@@ -75,7 +70,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     
         
     private func startRecording() throws {
-        // Cancel the previous task if it's running.
+        // 現在のタスクを一旦キャンセル
         if let recognitionTask = recognitionTask {
             recognitionTask.cancel()
             self.recognitionTask = nil
@@ -83,9 +78,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         
         let audioSession = AVAudioSession.sharedInstance()
         
-        //try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
         try audioSession.setCategory(AVAudioSessionCategoryRecord)
-        
         try audioSession.setMode(AVAudioSessionModeMeasurement)
         try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
         
@@ -108,11 +101,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 isFinal = result.isFinal
                 //文字列と音声が一致した時
                 if voice == self.voiceRecognize.speechText {
-                    self.audioEngine.stop()
-                    self.recognitionRequest?.endAudio()
-                    self.recordButton.isEnabled = false
-                    self.recordButton.setTitle("中止しています", for: .disabled)
-                    self.voiceRecognize.isRecognized = true
+                    self.voiceRecognize.isRecognized = true;
                 }
                 
             }
@@ -125,7 +114,6 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 self.recognitionTask = nil
                 
                 self.endRecognization()
-
             }
         }
         
@@ -186,27 +174,26 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     }
     
     func endRecognization() {
-        recordButton.isEnabled = true
         if voiceRecognize.isRecognized {
-            let text = "\"" + voiceRecognize.speechText + "\"";
-            
-            textView.text = text  + "と言いました"
+            // 正解，音を止める
+            audioEngine.stop()
+            recognitionRequest?.endAudio()
             recordButton.isEnabled = false
             
+            let text = "\"" + voiceRecognize.speechText + "\"";
+            textView.text = text  + "と言いました"
+            recordButton.isEnabled = false
         } else {
-            recordButton.setTitle("認識開始", for: [])
+            // 不正解，音を再生
+            vol += 10.0
+            let audioSession = AVAudioSession.sharedInstance()
+            try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
+            playSound()
+            
             let text = "\"" + voiceRecognize.speechText + "\"";
             textView.text = text  + "と言ってください"
+            recordButton.isEnabled = true
         }
-        vol += 10.0
-        let audioSession = AVAudioSession.sharedInstance()
-        try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
-        playSound()
-    }
-    
-    @IBAction func buttunPlaySound() {
-//        audioEngine = AVAudioEngine()
-        playSound()
     }
     
     func playSound() {
