@@ -102,16 +102,16 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8da-es-q0k">
-                                <rect key="frame" x="42" y="66" width="292" height="106"/>
+                                <rect key="frame" x="0.0" y="66" width="375" height="137"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="59"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lPZ-M0-ngV">
-                                <rect key="frame" x="158" y="553" width="59" height="49"/>
+                                <rect key="frame" x="152" y="542" width="72" height="72"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="mic.png"/>
+                                <state key="normal" image="mic1.png"/>
                                 <connections>
                                     <action selector="recordButtonReleased" destination="EX5-Y9-mJb" eventType="touchUpInside" id="hqS-Ep-EEj"/>
                                     <action selector="recordButtonReleased" destination="EX5-Y9-mJb" eventType="touchUpOutside" id="tgY-TU-d9N"/>
@@ -483,7 +483,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="mic.png" width="142" height="142"/>
+        <image name="mic1.png" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="vZt-5w-FkZ"/>
