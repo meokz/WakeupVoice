@@ -22,6 +22,8 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     @IBOutlet var recordButton : UIButton!
     
     @IBOutlet weak var timeLabel: UILabel!
+    
+    
     private var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
     
     // MARK: UIViewController
@@ -31,6 +33,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
 
+        
         // 時間の設定
         timeDisplay()
         _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timeDisplay), userInfo: nil, repeats: true)
@@ -66,7 +69,9 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             }
         }
     }
+
     
+        
     private func startRecording() throws {
         // Cancel the previous task if it's running.
         if let recognitionTask = recognitionTask {
@@ -75,7 +80,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         }
         
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(AVAudioSessionCategoryRecord)
+        try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
         try audioSession.setMode(AVAudioSessionModeMeasurement)
         try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
         
@@ -113,19 +118,9 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 
                 self.recognitionRequest = nil
                 self.recognitionTask = nil
-     
-                self.recordButton.isEnabled = true
-                if self.voiceRecognize.isRecognized {
-                    let text = "\"" + self.voiceRecognize.speechText + "\"";
+                
+                self.endRecognization()
 
-                    self.textView.text = text  + "と言いました"
-                    self.recordButton.isEnabled = false
-
-                } else {
-                   // self.recordButton.setTitle("認識開始", for: [])
-                    let text = "\"" + self.voiceRecognize.speechText + "\"";
-                    self.textView.text = text  + "と言ってください"
-                }
             }
         }
         
@@ -153,16 +148,23 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     
     // MARK: Interface Builder actions
     @IBAction func recordButtonTapped() {
+        try! startRecording()
+        recordButton.setTitle("認識中止", for: [])
+        
+        if ( audioPlayer.isPlaying ){
+            audioPlayer.stop()
+        }
+    }
+    
+    @IBAction func recordButtonReleased() {
         if audioEngine.isRunning {
             audioEngine.stop()
             recognitionRequest?.endAudio()
             recordButton.isEnabled = false
             recordButton.setTitle("中止しています", for: .disabled)
-        } else {
-            try! startRecording()
-            recordButton.setTitle("認識中止", for: [])
         }
     }
+
     
     public func timeDisplay(){
         let formatter = DateFormatter()
@@ -178,9 +180,31 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
 
     }
     
+    func endRecognization() {
+        recordButton.isEnabled = true
+        if voiceRecognize.isRecognized {
+            let text = "\"" + voiceRecognize.speechText + "\"";
+            
+            textView.text = text  + "と言いました"
+            recordButton.isEnabled = false
+            
+        } else {
+            recordButton.setTitle("認識開始", for: [])
+            let text = "\"" + voiceRecognize.speechText + "\"";
+            textView.text = text  + "と言ってください"
+        }
+        
+        playSound()
+    }
+    
+    @IBAction func buttunPlaySound() {
+//        audioEngine = AVAudioEngine()
+        playSound()
+    }
     
     func playSound() {
         // 再生する audio ファイルのパスを取得
+        print("a")
         let audioPath = Bundle.main.path(forResource: "bell", ofType:"mp3")!
         let audioUrl = URL(fileURLWithPath: audioPath)
         
@@ -202,5 +226,5 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         audioPlayer.prepareToPlay()
         audioPlayer.play()
     }
-
+ 
 }

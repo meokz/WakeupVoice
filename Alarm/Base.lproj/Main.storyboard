@@ -113,6 +113,8 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="mic.png"/>
                                 <connections>
+                                    <action selector="recordButtonReleased" destination="EX5-Y9-mJb" eventType="touchUpInside" id="hqS-Ep-EEj"/>
+                                    <action selector="recordButtonReleased" destination="EX5-Y9-mJb" eventType="touchUpOutside" id="tgY-TU-d9N"/>
                                     <action selector="recordButtonTapped" destination="EX5-Y9-mJb" eventType="touchDown" id="T5b-vZ-PIW"/>
                                 </connections>
                             </button>
@@ -120,7 +122,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
-                        <outlet property="recordButton" destination="lPZ-M0-ngV" id="gJw-F1-mdL"/>
+                        <outlet property="recordButton" destination="lPZ-M0-ngV" id="T0B-nI-IMB"/>
                         <outlet property="textView" destination="wSe-eP-obd" id="Ta3-cb-xoP"/>
                         <outlet property="timeLabel" destination="8da-es-q0k" id="gAl-Ej-3y2"/>
                     </connections>
