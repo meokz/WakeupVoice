@@ -16,12 +16,16 @@ public class VoiceRecognizeViewController : UIViewController,
     
     private let audioEngine = AVAudioEngine()
     
-    @IBOutlet var textView : UITextView!
+    //@IBOutlet var textView : UITextView!
+    
+    @IBOutlet weak var  textView: UILabel!
     
     @IBOutlet var recordButton : UIButton!
     
     @IBOutlet weak var timeLabel: UILabel!
     
+    let checkButtonImage :UIImage? = UIImage(named:"check.png")
+
     private var audioPlayer:AVAudioPlayer!
     
     var vol = 1.0
@@ -41,7 +45,7 @@ public class VoiceRecognizeViewController : UIViewController,
 
         let text = "\"" + self.voiceRecognize.speechText + "\"";
         self.textView.text = text + "と言ってください"
-      
+        
         playSound()
     }
 
@@ -170,6 +174,7 @@ public class VoiceRecognizeViewController : UIViewController,
         let minute = dateComponents[4]
         timeLabel.text = hour + ":" + minute
         timeLabel.adjustsFontSizeToFitWidth = true
+        textView.adjustsFontSizeToFitWidth = true
 
     }
     
@@ -181,8 +186,10 @@ public class VoiceRecognizeViewController : UIViewController,
             recordButton.isEnabled = false
             
             let text = "\"" + voiceRecognize.speechText + "\"";
-            textView.text = text  + "と言いました"
-            recordButton.isEnabled = false
+            textView.text = text  + "と言いました
+          
+            // チェックボタンの変更
+            self.recordButton.setImage(self.checkButtonImage!, for: .normal)
         } else {
             // 不正解，音を再生
             vol += 10.0
