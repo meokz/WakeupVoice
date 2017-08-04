@@ -145,11 +145,19 @@ public class VoiceRecognizeViewController : UIViewController,
     
     // MARK: Interface Builder actions
     @IBAction func recordButtonTapped() {
-        try! startRecording()
-        recordButton.setTitle("認識中止", for: [])
-        
-        if ( audioPlayer.isPlaying ){
-            audioPlayer.stop()
+        if !voiceRecognize.isRecognized {
+            // 音声認識開始
+            if ( audioPlayer.isPlaying ){
+                audioPlayer.stop()
+            }
+            try! startRecording()
+            recordButton.setTitle("認識中止", for: [])
+        } else {
+            // アラームリストを開く
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let recognizeVC = storyboard.instantiateViewController(withIdentifier: "Navigation") as? UINavigationController
+            self.present(recognizeVC!, animated: true, completion: nil)
+            
         }
     }
     
@@ -206,7 +214,6 @@ public class VoiceRecognizeViewController : UIViewController,
     
     func playSound() {
         // 再生する audio ファイルのパスを取得
-        print("a")
         let audioPath = Bundle.main.path(forResource: "bell", ofType:"mp3")!
         let audioUrl = URL(fileURLWithPath: audioPath)
         
