@@ -22,6 +22,8 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     @IBOutlet var recordButton : UIButton!
     
     @IBOutlet weak var timeLabel: UILabel!
+    
+    
     private var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
     
     // MARK: UIViewController
@@ -31,6 +33,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
 
+        
         // 時間の設定
         timeDisplay()
         _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timeDisplay), userInfo: nil, repeats: true)
@@ -65,7 +68,9 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             }
         }
     }
+
     
+        
     private func startRecording() throws {
         // Cancel the previous task if it's running.
         if let recognitionTask = recognitionTask {
@@ -152,16 +157,20 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     
     // MARK: Interface Builder actions
     @IBAction func recordButtonTapped() {
+            try! startRecording()
+            recordButton.setTitle("認識中止", for: [])
+    }
+    
+    @IBAction func recordButtonReleased() {
         if audioEngine.isRunning {
             audioEngine.stop()
             recognitionRequest?.endAudio()
             recordButton.isEnabled = false
             recordButton.setTitle("中止しています", for: .disabled)
-        } else {
-            try! startRecording()
-            recordButton.setTitle("認識中止", for: [])
         }
+        playSound()
     }
+
     
     public func timeDisplay(){
         let formatter = DateFormatter()
@@ -199,5 +208,5 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         audioPlayer.prepareToPlay()
         audioPlayer.play()
     }
-
+ 
 }
