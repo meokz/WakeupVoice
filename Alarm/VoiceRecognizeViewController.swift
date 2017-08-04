@@ -44,8 +44,8 @@ public class VoiceRecognizeViewController : UIViewController,
         _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timeDisplay), userInfo: nil, repeats: true)
 
         let text = "\"" + self.voiceRecognize.speechText + "\"";
-        self.textView.text = text + "と言ってください"
-        
+        self.textView.text = text + "\nと言ってください"
+        self.textView.numberOfLines = 2
         playSound()
     }
 
