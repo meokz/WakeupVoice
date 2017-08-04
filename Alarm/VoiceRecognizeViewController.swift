@@ -186,7 +186,7 @@ public class VoiceRecognizeViewController : UIViewController,
             recordButton.isEnabled = false
             
             let text = "\"" + voiceRecognize.speechText + "\"";
-            textView.text = text  + "と言いました
+            textView.text = text  + "と言いました"
           
             // チェックボタンの変更
             self.recordButton.setImage(self.checkButtonImage!, for: .normal)
@@ -199,8 +199,9 @@ public class VoiceRecognizeViewController : UIViewController,
             
             let text = "\"" + voiceRecognize.speechText + "\"";
             textView.text = text  + "と言ってください"
-            recordButton.isEnabled = true
         }
+        recordButton.isEnabled = true
+        
     }
     
     func playSound() {
