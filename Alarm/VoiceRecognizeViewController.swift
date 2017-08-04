@@ -23,6 +23,8 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     
     @IBOutlet weak var timeLabel: UILabel!
     
+    var vol = 1.0
+    
     
     private var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
     
@@ -79,7 +81,10 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         }
         
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
+        
+        //try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
+        try audioSession.setCategory(AVAudioSessionCategoryRecord)
+        
         try audioSession.setMode(AVAudioSessionModeMeasurement)
         try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
         
@@ -189,7 +194,9 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             let text = "\"" + voiceRecognize.speechText + "\"";
             textView.text = text  + "と言ってください"
         }
-        
+        vol += 10.0
+        let audioSession = AVAudioSession.sharedInstance()
+        try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
         playSound()
     }
     
@@ -218,9 +225,9 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
             print("Error \(error.localizedDescription)")
         }
         
+        audioPlayer.volume = Float(15.0+vol)
         audioPlayer.delegate = self
         audioPlayer.prepareToPlay()
         audioPlayer.play()
     }
- 
 }
