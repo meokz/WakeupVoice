@@ -16,6 +16,7 @@
 		7773A0FA1E4610B700811A1D /* SegueInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7773A0F91E4610B700811A1D /* SegueInfo.swift */; };
 		77A8570D1E40D76000971367 /* AlarmApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A8570C1E40D76000971367 /* AlarmApplicationDelegate.swift */; };
 		77A8570F1E41A04600971367 /* AlarmSchedulerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A8570E1E41A04600971367 /* AlarmSchedulerDelegate.swift */; };
+		77AF5AED1F340B8C000F2100 /* mic1.png in Resources */ = {isa = PBXBuildFile; fileRef = 77AF5AEC1F340B8C000F2100 /* mic1.png */; };
 		77B08F9F1EA6552100BECF6C /* NotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B08F9E1EA6552100BECF6C /* NotificationName+Extension.swift */; };
 		9E16062C1C62358F009B2407 /* MediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E16062B1C62358F009B2407 /* MediaViewController.swift */; };
 		9E1F30731C49128000C66F79 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1F30721C49128000C66F79 /* Scheduler.swift */; };
@@ -54,6 +55,7 @@
 		7773A0F91E4610B700811A1D /* SegueInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegueInfo.swift; sourceTree = "<group>"; };
 		77A8570C1E40D76000971367 /* AlarmApplicationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmApplicationDelegate.swift; sourceTree = "<group>"; };
 		77A8570E1E41A04600971367 /* AlarmSchedulerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmSchedulerDelegate.swift; sourceTree = "<group>"; };
+		77AF5AEC1F340B8C000F2100 /* mic1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mic1.png; sourceTree = "<group>"; };
 		77B08F9E1EA6552100BECF6C /* NotificationName+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extension.swift"; sourceTree = "<group>"; };
 		9E16062B1C62358F009B2407 /* MediaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaViewController.swift; sourceTree = "<group>"; };
 		9E1F30721C49128000C66F79 /* Scheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 		9EED786F1AA0F03F00961BC2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				77AF5AEC1F340B8C000F2100 /* mic1.png */,
 				9E92445A1C690A8D00724DFA /* tickle.mp3 */,
 				9E3B062E1BB8347000453456 /* bell.mp3 */,
 				9EED78701AA0F03F00961BC2 /* Info.plist */,
@@ -313,6 +316,7 @@
 				9E3B062F1BB8347000453456 /* bell.mp3 in Resources */,
 				9EED787C1AA0F03F00961BC2 /* LaunchScreen.xib in Resources */,
 				9EED78791AA0F03F00961BC2 /* Images.xcassets in Resources */,
+				77AF5AED1F340B8C000F2100 /* mic1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

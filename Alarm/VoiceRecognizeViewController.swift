@@ -45,7 +45,8 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
       
         playSound()
     }
-    
+
+
     override public func viewDidAppear(_ animated: Bool) {
         speechRecognizer.delegate = self
         
@@ -105,7 +106,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 let voice =  result.bestTranscription.formattedString
                 self.textView.text = voice
                 isFinal = result.isFinal
-                
+                //文字列と音声が一致した時
                 if voice == self.voiceRecognize.speechText {
                     self.audioEngine.stop()
                     self.recognitionRequest?.endAudio()
@@ -124,6 +125,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                 self.recognitionTask = nil
                 
                 self.endRecognization()
+
             }
         }
         
@@ -142,7 +144,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         if available {
             recordButton.isEnabled = true
-            recordButton.setTitle("認識開始", for: [])
+//            recordButton.setTitle("認識開始", for: [])
         } else {
             recordButton.isEnabled = false
             recordButton.setTitle("認識できません", for: .disabled)
@@ -179,6 +181,8 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         let hour = dateComponents[3]
         let minute = dateComponents[4]
         timeLabel.text = hour + ":" + minute
+        timeLabel.adjustsFontSizeToFitWidth = true
+
     }
     
     func endRecognization() {
