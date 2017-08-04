@@ -17,12 +17,16 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
     
     private let audioEngine = AVAudioEngine()
     
-    @IBOutlet var textView : UITextView!
+    //@IBOutlet var textView : UITextView!
+    
+    @IBOutlet weak var  textView: UILabel!
     
     @IBOutlet var recordButton : UIButton!
     
     @IBOutlet weak var timeLabel: UILabel!
     
+    let checkButtonImage :UIImage? = UIImage(named:"check.png")
+
     
     private var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
     
@@ -40,7 +44,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
 
         let text = "\"" + self.voiceRecognize.speechText + "\"";
         self.textView.text = text + "と言ってください"
-      
+        
         playSound()
     }
 
@@ -106,8 +110,10 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
                     self.audioEngine.stop()
                     self.recognitionRequest?.endAudio()
                     self.recordButton.isEnabled = false
-                    self.recordButton.setTitle("中止しています", for: .disabled)
+//                    self.recordButton.setTitle("中止しています", for: .disabled)
                     self.voiceRecognize.isRecognized = true
+                    //チェックボタンの変更
+                    self.recordButton.setImage(self.checkButtonImage!, for: .normal)
                 }
                 
             }
@@ -177,6 +183,7 @@ public class VoiceRecognizeViewController : UIViewController, SFSpeechRecognizer
         let minute = dateComponents[4]
         timeLabel.text = hour + ":" + minute
         timeLabel.adjustsFontSizeToFitWidth = true
+        textView.adjustsFontSizeToFitWidth = true
 
     }
     
