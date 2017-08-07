@@ -242,6 +242,7 @@ public class VoiceRecognizeViewController : UIViewController,
         audioPlayer.volume = Float(15.0+vol)
         audioPlayer.delegate = self
         audioPlayer.prepareToPlay()
+        audioPlayer.numberOfLoops = -1
         audioPlayer.play()
     }
 }
