@@ -4,17 +4,20 @@ import AudioToolbox
 import AVFoundation
 
 @UIApplicationMain
+
 class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, AlarmApplicationDelegate{
 
     var window: UIWindow?
     var audioPlayer: AVAudioPlayer?
     let alarmScheduler: AlarmSchedulerDelegate = Scheduler()
     var alarmModel: Alarms = Alarms()
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         var error: NSError?
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            let audioSession = AVAudioSession.sharedInstance()
+            try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
+            try! audioSession.setCategory(AVAudioSessionCategoryAmbient)
         } catch let error1 as NSError{
             error = error1
             print("could not set session. err:\(error!.localizedDescription)")
@@ -30,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
         return true
     }
    
-    // ローカル通知の受信
+    // ローカル通知を開いたときの処理
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         
         var isSnooze: Bool = false
@@ -40,6 +43,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
             isSnooze = userInfo["snooze"] as! Bool
             soundName = userInfo["soundName"] as! String
             index = userInfo["index"] as! Int
+//            
+//            //送りたいmp3ファイルの選択
+//            let appDelegate:AppDelegate = UIApplication.shared.delegate as! AppDelegate //AppDelegateのインスタンスを取得
+//            appDelegate.message = soundName //appDelegateの変数を操作
         }
         
         // 通知を押すと音が消えるので，画面を開いたときに再度音を鳴らす
@@ -60,13 +67,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
             self.alarmModel = Alarms()
             self.alarmModel.alarms[index].onSnooze = false
             
+            // 音声認識画面の作成
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let recognizeVC = storyboard.instantiateViewController(withIdentifier: "VoiceRecognize") as? VoiceRecognizeViewController
+            recognizeVC?.voiceRecognize.speechText = self.alarmModel.alarms[index].label
+            recognizeVC?.voiceRecognize.soundName = soundName
+            
             var mainVC = self.window?.visibleViewController as? MainAlarmViewController
             if mainVC == nil {
+                // MainAlarm画面以外を開いている時
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 mainVC = storyboard.instantiateViewController(withIdentifier: "Alarm") as? MainAlarmViewController
+                
+                if let vc = self.window?.rootViewController?.presentedViewController {
+                    vc.present(recognizeVC!, animated: true, completion: nil)
+                }
+            } else {
+                // MainAlarm画面を開いている時
+                mainVC!.present(recognizeVC!, animated: true, completion: nil)
+
             }
-//            mainVC!.changeSwitchButtonState(index: index)
-            mainVC!.showVoiceRecognize()
+            mainVC!.changeSwitchButtonState(index: index)
         }
         
         let storageController = UIAlertController(title: "アラーム", message: nil, preferredStyle: .alert)
@@ -77,6 +98,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
         
         // アプリがフォアグランドならアラート画面を表示
         window?.visibleViewController?.navigationController?.present(storageController, animated: true, completion: nil)
+    }
+    
+    
+    func showVoiceRecognize(label:String) {
+        // 音声認識画面を開く
+
     }
     
     // snooze notification handler when app in background
@@ -104,20 +131,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
     
     //AlarmApplicationDelegate protocol
     func playSound(_ soundName: String) {
-        
-        //vibrate phone first
+        // バイブレーションを鳴らす
         AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-        //set vibrate callback
+        // バイブレーションが終わった時のコールバック（延々とバイブする）
         AudioServicesAddSystemSoundCompletion(SystemSoundID(kSystemSoundID_Vibrate),nil,
             nil,
             { (_:SystemSoundID, _:UnsafeMutableRawPointer?) -> Void in
                 AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
             },
             nil)
+        
         let url = URL(fileURLWithPath: Bundle.main.path(forResource: soundName, ofType: "mp3")!)
         
-        var error: NSError?
+        let audioSession = AVAudioSession.sharedInstance()
+        try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
+        try! audioSession.setCategory(AVAudioSessionCategoryAmbient)
         
+        var error: NSError?
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
         } catch let error1 as NSError {
