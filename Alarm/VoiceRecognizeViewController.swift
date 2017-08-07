@@ -54,6 +54,13 @@ public class VoiceRecognizeViewController : UIViewController,
     @IBOutlet var recordButton : UIButton!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var sourceView: UIImageView!
+      
+    @IBOutlet weak var Volume1: UILabel!
+    @IBOutlet weak var Volume2: UILabel!
+    @IBOutlet weak var Volume3: UILabel!
+    @IBOutlet weak var Volume4: UILabel!
+    @IBOutlet weak var Volume5: UILabel!
+      
     @IBOutlet weak var volumeLabel : UILabel!
     
     let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "ja-JP"))!
@@ -97,6 +104,12 @@ public class VoiceRecognizeViewController : UIViewController,
         pulsator.numPulse = 3
         pulsator.radius = 125.0
         pulsator.backgroundColor = UIColor(red: 0.0, green: 0.635, blue: 1.00, alpha: 0.80).cgColor
+        
+        Volume1.backgroundColor = UIColor.green
+        Volume2.backgroundColor = UIColor.green
+        Volume3.backgroundColor = UIColor.green
+        Volume4.backgroundColor = UIColor.green
+        Volume5.backgroundColor = UIColor.green
     }
 
     override public func viewDidAppear(_ animated: Bool) {
