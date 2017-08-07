@@ -5,6 +5,37 @@ import Speech
 import AVFoundation
 import Pulsator
 
+
+extension String {
+    func toKatakana() -> String {
+        var str = ""
+        
+        for c in unicodeScalars {
+            if c.value >= 0x3041 && c.value <= 0x3096 {
+                str += String(describing: UnicodeScalar(c.value + 96)!)
+            } else {
+                str += String(c)
+            }
+        }
+        
+        return str
+    }
+    
+    func toHiragana() -> String {
+        var str = ""
+        
+        for c in unicodeScalars {
+            if c.value >= 0x30A1 && c.value <= 0x30F6 {
+                str += String(describing: UnicodeScalar(c.value - 96)!)
+            } else {
+                str += String(c)
+            }
+        }
+        
+        return str
+    }
+}
+
 public class VoiceRecognizeViewController : UIViewController,
     SFSpeechRecognizerDelegate ,AVAudioPlayerDelegate {
     
@@ -75,6 +106,7 @@ public class VoiceRecognizeViewController : UIViewController,
         view.layer.layoutIfNeeded()
         pulsator.position = sourceView.layer.position
     }
+
     
     private func startRecording() throws {
         // 現在のタスクを一旦キャンセル
@@ -106,8 +138,9 @@ public class VoiceRecognizeViewController : UIViewController,
                 self.textView.text = voice
                 isFinal = result.isFinal
                 //文字列と音声が一致した時
-                if voice == self.voiceRecognize.speechText {
+                if voice.toHiragana() == self.voiceRecognize.speechText.toHiragana() {
                     self.voiceRecognize.isRecognized = true;
+                    self.voiceRecognize.speechText = voice;
                 }
                 
             }
