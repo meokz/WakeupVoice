@@ -76,6 +76,9 @@ public class VoiceRecognizeViewController : UIViewController,
         playSound()
         
         sourceView.layer.superlayer?.insertSublayer(pulsator, below: sourceView.layer)
+        pulsator.numPulse = 3
+        pulsator.radius = 125.0
+        pulsator.backgroundColor = UIColor(red: 0.0, green: 0.635, blue: 1.00, alpha: 0.80).cgColor
         pulsator.start()
     }
 
@@ -231,6 +234,8 @@ public class VoiceRecognizeViewController : UIViewController,
             let text = "\"" + voiceRecognize.speechText + "\"";
             textView.text = text  + "と言いました"
           
+            pulsator.stop()
+            
             // チェックボタンの変更
             self.recordButton.setImage(self.checkButtonImage!, for: .normal)
         } else {
