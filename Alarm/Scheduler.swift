@@ -109,7 +109,7 @@ class Scheduler : AlarmSchedulerDelegate
     func setNotificationWithDate(_ date: Date, onWeekdaysForNotify weekdays:[Int], snoozeEnabled:Bool,  onSnooze: Bool, soundName: String, index: Int) {
         // ローカル通知の設定
         let AlarmNotification: UILocalNotification = UILocalNotification()
-        AlarmNotification.alertBody = "指定時間になりました"
+        AlarmNotification.alertBody = "アラーム解除"
         AlarmNotification.alertAction = "Open App"
         AlarmNotification.category = "myAlarmCategory"
         // 通知時に指定した音声ファイルを再生する
