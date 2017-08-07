@@ -4,13 +4,17 @@ import AudioToolbox
 import AVFoundation
 
 @UIApplicationMain
+
 class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, AlarmApplicationDelegate{
 
     var window: UIWindow?
     var audioPlayer: AVAudioPlayer?
     let alarmScheduler: AlarmSchedulerDelegate = Scheduler()
     var alarmModel: Alarms = Alarms()
-
+    
+    //送りたいmp3ファイルの宣言
+    var message:String?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         var error: NSError?
         do {
@@ -42,6 +46,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
             isSnooze = userInfo["snooze"] as! Bool
             soundName = userInfo["soundName"] as! String
             index = userInfo["index"] as! Int
+            
+            //送りたいmp3ファイルの選択
+            let appDelegate:AppDelegate = UIApplication.shared.delegate as! AppDelegate //AppDelegateのインスタンスを取得
+            appDelegate.message = soundName //appDelegateの変数を操作
+            
         }
         
         // 通知を押すと音が消えるので，画面を開いたときに再度音を鳴らす
