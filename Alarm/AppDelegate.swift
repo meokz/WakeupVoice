@@ -62,12 +62,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
             self.alarmModel = Alarms()
             self.alarmModel.alarms[index].onSnooze = false
             
+            // 音声認識画面の作成
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let recognizeVC = storyboard.instantiateViewController(withIdentifier: "VoiceRecognize") as? VoiceRecognizeViewController
+            recognizeVC?.voiceRecognize.speechText = self.alarmModel.alarms[index].label
+            
             var mainVC = self.window?.visibleViewController as? MainAlarmViewController
             if mainVC == nil {
+                // MainAlarm画面以外を開いている時
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 mainVC = storyboard.instantiateViewController(withIdentifier: "Alarm") as? MainAlarmViewController
+                
+                if let vc = self.window?.rootViewController?.presentedViewController {
+                    vc.present(recognizeVC!, animated: true, completion: nil)
+                }
+            } else {
+                // MainAlarm画面を開いている時
+                mainVC!.present(recognizeVC!, animated: true, completion: nil)
+
             }
-            mainVC!.showVoiceRecognize(label: self.alarmModel.alarms[index].label)
             mainVC!.changeSwitchButtonState(index: index)
         }
         
@@ -79,6 +92,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
         
         // アプリがフォアグランドならアラート画面を表示
         window?.visibleViewController?.navigationController?.present(storageController, animated: true, completion: nil)
+    }
+    
+    
+    func showVoiceRecognize(label:String) {
+        // 音声認識画面を開く
+
     }
     
     // snooze notification handler when app in background
