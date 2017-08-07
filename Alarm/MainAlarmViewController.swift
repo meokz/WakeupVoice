@@ -184,10 +184,11 @@ class MainAlarmViewController: UITableViewController{
         }
     }
     
-    public func showVoiceRecognize() {
+    public func showVoiceRecognize(label:String) {
         // 音声認識画面を開く
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let recognizeVC = storyboard.instantiateViewController(withIdentifier: "VoiceRecognize") as? VoiceRecognizeViewController
+        recognizeVC?.voiceRecognize.speechText = label
         self.present(recognizeVC!, animated: true, completion: nil)
     }
 
