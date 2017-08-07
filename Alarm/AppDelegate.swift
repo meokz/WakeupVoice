@@ -14,7 +14,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         var error: NSError?
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            let audioSession = AVAudioSession.sharedInstance()
+            try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
+            try! audioSession.setCategory(AVAudioSessionCategoryAmbient)
         } catch let error1 as NSError{
             error = error1
             print("could not set session. err:\(error!.localizedDescription)")
@@ -30,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
         return true
     }
    
-    // ローカル通知の受信
+    // ローカル通知を開いたときの処理
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         
         var isSnooze: Bool = false
@@ -65,8 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 mainVC = storyboard.instantiateViewController(withIdentifier: "Alarm") as? MainAlarmViewController
             }
-//            mainVC!.changeSwitchButtonState(index: index)
             mainVC!.showVoiceRecognize(label: self.alarmModel.alarms[index].label)
+            mainVC!.changeSwitchButtonState(index: index)
         }
         
         let storageController = UIAlertController(title: "アラーム", message: nil, preferredStyle: .alert)
@@ -104,20 +106,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
     
     //AlarmApplicationDelegate protocol
     func playSound(_ soundName: String) {
-        
-        //vibrate phone first
+        // バイブレーションを鳴らす
         AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-        //set vibrate callback
+        // バイブレーションが終わった時のコールバック（延々とバイブする）
         AudioServicesAddSystemSoundCompletion(SystemSoundID(kSystemSoundID_Vibrate),nil,
             nil,
             { (_:SystemSoundID, _:UnsafeMutableRawPointer?) -> Void in
                 AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
             },
             nil)
+        
         let url = URL(fileURLWithPath: Bundle.main.path(forResource: soundName, ofType: "mp3")!)
         
-        var error: NSError?
+        let audioSession = AVAudioSession.sharedInstance()
+        try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
+        try! audioSession.setCategory(AVAudioSessionCategoryAmbient)
         
+        var error: NSError?
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
         } catch let error1 as NSError {

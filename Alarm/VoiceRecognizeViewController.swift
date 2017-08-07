@@ -41,6 +41,7 @@ public class VoiceRecognizeViewController : UIViewController,
         let text = "\"" + self.voiceRecognize.speechText + "\"";
         self.textView.text = text + "\nと言ってください"
         self.textView.numberOfLines = 2
+        
         playSound()
         
         sourceView.layer.superlayer?.insertSublayer(pulsator, below: sourceView.layer)
@@ -83,7 +84,6 @@ public class VoiceRecognizeViewController : UIViewController,
         }
         
         let audioSession = AVAudioSession.sharedInstance()
-        
         try audioSession.setCategory(AVAudioSessionCategoryRecord)
         try audioSession.setMode(AVAudioSessionModeMeasurement)
         try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
@@ -203,8 +203,6 @@ public class VoiceRecognizeViewController : UIViewController,
         } else {
             // 不正解，音を再生
             vol += 10.0
-            let audioSession = AVAudioSession.sharedInstance()
-            try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
             playSound()
             
             let text = "\"" + voiceRecognize.speechText + "\"";
@@ -215,6 +213,10 @@ public class VoiceRecognizeViewController : UIViewController,
     }
     
     func playSound() {
+        let audioSession = AVAudioSession.sharedInstance()
+        try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
+        try! audioSession.setCategory(AVAudioSessionCategoryAmbient)
+        
         // 再生する audio ファイルのパスを取得
         let audioPath = Bundle.main.path(forResource: "bell", ofType:"mp3")!
         let audioUrl = URL(fileURLWithPath: audioPath)

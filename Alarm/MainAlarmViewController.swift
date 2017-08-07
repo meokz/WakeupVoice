@@ -154,7 +154,7 @@ class MainAlarmViewController: UITableViewController{
             addEditController.segueInfo = SegueInfo(curCellIndex: alarmModel.count, isEditMode: false, label: "おはよう", mediaLabel: "bell", mediaID: "", repeatWeekdays: [], enabled: false, snoozeEnabled: false)
         }
         else if segue.identifier == Id.editSegueIdentifier {
-            addEditController.navigationItem.title = "edit Alarm"
+            addEditController.navigationItem.title = "アラームの編集"
             addEditController.segueInfo = sender as! SegueInfo
         }
     }
@@ -191,6 +191,5 @@ class MainAlarmViewController: UITableViewController{
         recognizeVC?.voiceRecognize.speechText = label
         self.present(recognizeVC!, animated: true, completion: nil)
     }
-
 }
 
