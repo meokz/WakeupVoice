@@ -4,7 +4,7 @@ import UIKit
 import Speech
 import AVFoundation
 import Pulsator
-
+import AudioToolbox
 
 extension String {
     func toKatakana() -> String {
@@ -36,6 +36,17 @@ extension String {
     }
 }
 
+private func AudioQueueInputCallback(
+    _ inUserData: UnsafeMutableRawPointer?,
+    inAQ: AudioQueueRef,
+    inBuffer: AudioQueueBufferRef,
+    inStartTime: UnsafePointer<AudioTimeStamp>,
+    inNumberPacketDescriptions: UInt32,
+    inPacketDescs: UnsafePointer<AudioStreamPacketDescription>?)
+{
+    // Do nothing, because not recoding.
+}
+
 public class VoiceRecognizeViewController : UIViewController,
     SFSpeechRecognizerDelegate ,AVAudioPlayerDelegate {
     
@@ -43,6 +54,7 @@ public class VoiceRecognizeViewController : UIViewController,
     @IBOutlet var recordButton : UIButton!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var sourceView: UIImageView!
+    @IBOutlet weak var volumeLabel : UILabel!
     
     let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "ja-JP"))!
     var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
@@ -58,7 +70,10 @@ public class VoiceRecognizeViewController : UIViewController,
     var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
 
     let pulsator = Pulsator()
-
+    var queue: AudioQueueRef!
+    
+    var isVolumeInit : Bool = false
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -69,6 +84,9 @@ public class VoiceRecognizeViewController : UIViewController,
         timeDisplay()
         _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timeDisplay), userInfo: nil, repeats: true)
 
+        volumeDisplay()
+        _ = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(volumeDisplay), userInfo: nil, repeats: true)
+        
         let text = "\"" + self.voiceRecognize.speechText + "\"";
         self.textView.text = text + "\nと言ってください"
         self.textView.numberOfLines = 2
@@ -146,11 +164,9 @@ public class VoiceRecognizeViewController : UIViewController,
                     self.voiceRecognize.isRecognized = true;
                     self.voiceRecognize.speechText = voice;
                 }
-                
             }
             
             if error != nil || isFinal {
-                self.audioEngine.stop()
                 inputNode.removeTap(onBus: 0)
                 
                 self.recognitionRequest = nil
@@ -171,46 +187,46 @@ public class VoiceRecognizeViewController : UIViewController,
         textView.text = "(認識中...)"
     }
     
-    // MARK: SFSpeechRecognizerDelegate
     public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         if available {
             recordButton.isEnabled = true
 //            recordButton.setTitle("認識開始", for: [])
         } else {
             recordButton.isEnabled = false
-            recordButton.setTitle("認識できません", for: .disabled)
+//            recordButton.setTitle("認識できません", for: .disabled)
         }
     }
     
     // MARK: Interface Builder actions
     @IBAction func recordButtonTapped() {
-        if !voiceRecognize.isRecognized {
-            // 音声認識開始
-            if ( audioPlayer.isPlaying ){
-                audioPlayer.stop()
-            }
-            try! startRecording()
-            recordButton.setTitle("認識中止", for: [])
-        } else {
+        if voiceRecognize.isRecognized && voiceRecognize.isVolume {
             // アラームリストを開く
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let recognizeVC = storyboard.instantiateViewController(withIdentifier: "Navigation") as? UINavigationController
             self.present(recognizeVC!, animated: true, completion: nil)
+        } else {
             
+            // 音声認識開始
+            if (audioPlayer.isPlaying){
+                audioPlayer.stop()
+            }
+            try! startRecording()
+            startUpdatingVolume()
+            recordButton.setTitle("認識中止", for: [])
         }
     }
     
     @IBAction func recordButtonReleased() {
         if audioEngine.isRunning {
             audioEngine.stop()
+            stopUpdatingVolume()
             recognitionRequest?.endAudio()
             recordButton.isEnabled = false
             recordButton.setTitle("中止しています", for: .disabled)
         }
     }
-
     
-    public func timeDisplay(){
+    func timeDisplay(){
         let formatter = DateFormatter()
         formatter.timeZone = TimeZone.ReferenceType.local
         formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
@@ -222,13 +238,34 @@ public class VoiceRecognizeViewController : UIViewController,
         timeLabel.text = hour + ":" + minute
         timeLabel.adjustsFontSizeToFitWidth = true
         textView.adjustsFontSizeToFitWidth = true
-
+    }
+    
+    func volumeDisplay() {
+        if isVolumeInit == false {
+            return
+        }
+        
+        var levelMeter = AudioQueueLevelMeterState()
+        var propertySize = UInt32(MemoryLayout<AudioQueueLevelMeterState>.size)
+        
+        AudioQueueGetProperty(self.queue, kAudioQueueProperty_CurrentLevelMeterDB,
+                              &levelMeter, &propertySize)
+        
+        // Show the audio channel's peak and average RMS power.
+        self.volumeLabel.text = "".appendingFormat("%.2f", levelMeter.mPeakPower)
+//        self.averageTextField.text = "".appendingFormat("%.2f", levelMeter.mAveragePower)
+        
+        if levelMeter.mPeakPower > voiceRecognize.volume {
+            voiceRecognize.isVolume = true
+        }
     }
     
     func endRecognization() {
-        if voiceRecognize.isRecognized {
+        self.audioEngine.stop()
+        self.stopUpdatingVolume()
+        
+        if voiceRecognize.isRecognized && voiceRecognize.isVolume {
             // 正解，音を止める
-            audioEngine.stop()
             recognitionRequest?.endAudio()
             recordButton.isEnabled = false
             
@@ -244,11 +281,18 @@ public class VoiceRecognizeViewController : UIViewController,
             vol += 10.0
             playSound()
             
-            let text = "\"" + voiceRecognize.speechText + "\"";
-            textView.text = text  + "と言ってください"
+            if !voiceRecognize.isRecognized && !voiceRecognize.isVolume {
+                let text = "\"" + voiceRecognize.speechText + "\"";
+                textView.text = "もっと大きな声で" + text  + "と言ってください"
+            } else if !voiceRecognize.isRecognized {
+                let text = "\"" + voiceRecognize.speechText + "\"";
+                textView.text = text  + "と言ってください"
+            } else if !voiceRecognize.isVolume {
+                textView.text = "もっと大きな声で言ってください"
+            }
         }
-        recordButton.isEnabled = true
         
+        recordButton.isEnabled = true
     }
     
     func playSound() {
@@ -284,4 +328,48 @@ public class VoiceRecognizeViewController : UIViewController,
         audioPlayer.numberOfLoops = -1
         audioPlayer.play()
     }
+    
+    func startUpdatingVolume() {
+        // Set data format
+        var dataFormat = AudioStreamBasicDescription(
+            mSampleRate: 44100.0,
+            mFormatID: kAudioFormatLinearPCM,
+            mFormatFlags: AudioFormatFlags(kLinearPCMFormatFlagIsBigEndian | kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked),
+            mBytesPerPacket: 2,
+            mFramesPerPacket: 1,
+            mBytesPerFrame: 2,
+            mChannelsPerFrame: 1,
+            mBitsPerChannel: 16,
+            mReserved: 0)
+        
+        // Observe input level
+        var audioQueue: AudioQueueRef? = nil
+        var error = noErr
+        error = AudioQueueNewInput(
+            &dataFormat,
+            AudioQueueInputCallback,
+            UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque()),
+            .none,
+            .none,
+            0,
+            &audioQueue)
+        if error == noErr {
+            self.queue = audioQueue
+        }
+        AudioQueueStart(self.queue, nil)
+        
+        // Enable level meter
+        var enabledLevelMeter: UInt32 = 1
+        AudioQueueSetProperty(self.queue, kAudioQueueProperty_EnableLevelMetering, &enabledLevelMeter, UInt32(MemoryLayout<UInt32>.size))
+        
+        isVolumeInit = true;
+    }
+    
+    func stopUpdatingVolume() {
+        AudioQueueFlush(self.queue)
+        AudioQueueStop(self.queue, false)
+        AudioQueueDispose(self.queue, true)
+    }
+
+
 }

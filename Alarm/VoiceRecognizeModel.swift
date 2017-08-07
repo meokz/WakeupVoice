@@ -11,4 +11,6 @@ import Foundation
 struct VoiceRecognizeModel {
     var speechText : String = "おはよう"
     var isRecognized : Bool = false
+    var isVolume : Bool = false
+    var volume : Float = 1.00
 }
