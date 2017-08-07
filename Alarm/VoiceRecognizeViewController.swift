@@ -213,9 +213,13 @@ public class VoiceRecognizeViewController : UIViewController,
     }
     
     func playSound() {
+        if audioPlayer != nil {
+            audioPlayer.stop()
+        }
+        
         let audioSession = AVAudioSession.sharedInstance()
         try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
-        try! audioSession.setCategory(AVAudioSessionCategoryAmbient)
+//        try! audioSession.setCategory(AVAudioSessionCategoryAmbient)
         
         // 再生する audio ファイルのパスを取得
         let audioPath = Bundle.main.path(forResource: "bell", ofType:"mp3")!
