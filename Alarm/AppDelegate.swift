@@ -67,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate, Al
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 mainVC = storyboard.instantiateViewController(withIdentifier: "Alarm") as? MainAlarmViewController
             }
-            mainVC!.showVoiceRecognize()
+            mainVC!.showVoiceRecognize(label: self.alarmModel.alarms[index].label)
             mainVC!.changeSwitchButtonState(index: index)
         }
         

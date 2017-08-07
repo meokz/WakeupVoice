@@ -24,7 +24,7 @@ public class VoiceRecognizeViewController : UIViewController,
     
     var vol = 1.0
     
-    private var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
+    var voiceRecognize : VoiceRecognizeModel = VoiceRecognizeModel()
 
     let pulsator = Pulsator()
 
