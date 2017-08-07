@@ -79,11 +79,11 @@ public class VoiceRecognizeViewController : UIViewController,
         pulsator.numPulse = 3
         pulsator.radius = 125.0
         pulsator.backgroundColor = UIColor(red: 0.0, green: 0.635, blue: 1.00, alpha: 0.80).cgColor
-        pulsator.start()
     }
 
     override public func viewDidAppear(_ animated: Bool) {
         speechRecognizer.delegate = self
+        pulsator.start()
         
         SFSpeechRecognizer.requestAuthorization { authStatus in
             OperationQueue.main.addOperation {
@@ -102,6 +102,7 @@ public class VoiceRecognizeViewController : UIViewController,
                 }
             }
         }
+    
     }
 
     public override func viewDidLayoutSubviews() {
