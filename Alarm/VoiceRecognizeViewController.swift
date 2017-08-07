@@ -55,12 +55,12 @@ public class VoiceRecognizeViewController : UIViewController,
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var sourceView: UIImageView!
       
-    @IBOutlet weak var Volume1: UILabel!
-    @IBOutlet weak var Volume2: UILabel!
-    @IBOutlet weak var Volume3: UILabel!
-    @IBOutlet weak var Volume4: UILabel!
-    @IBOutlet weak var Volume5: UILabel!
-      
+//    @IBOutlet weak var Volume1: UILabel!
+//    @IBOutlet weak var Volume2: UILabel!
+//    @IBOutlet weak var Volume3: UILabel!
+//    @IBOutlet weak var Volume4: UILabel!
+//    @IBOutlet weak var Volume5: UILabel!
+//      
     @IBOutlet weak var volumeLabel : UILabel!
     
     let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "ja-JP"))!
@@ -105,11 +105,11 @@ public class VoiceRecognizeViewController : UIViewController,
         pulsator.radius = 125.0
         pulsator.backgroundColor = UIColor(red: 0.0, green: 0.635, blue: 1.00, alpha: 0.80).cgColor
         
-        Volume1.backgroundColor = UIColor.green
-        Volume2.backgroundColor = UIColor.green
-        Volume3.backgroundColor = UIColor.green
-        Volume4.backgroundColor = UIColor.green
-        Volume5.backgroundColor = UIColor.green
+//        Volume1.backgroundColor = UIColor.green
+//        Volume2.backgroundColor = UIColor.green
+//        Volume3.backgroundColor = UIColor.green
+//        Volume4.backgroundColor = UIColor.green
+//        Volume5.backgroundColor = UIColor.green
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -315,15 +315,13 @@ public class VoiceRecognizeViewController : UIViewController,
         
         let audioSession = AVAudioSession.sharedInstance()
         try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
-//        try! audioSession.setCategory(AVAudioSessionCategoryAmbient)
         
-        
-        let appDelegate:AppDelegate = UIApplication.shared.delegate as! AppDelegate //AppDelegateのインスタンスを取得
-        var message = appDelegate.message
+        let message = voiceRecognize.soundName
+        print(message)
         // 再生する audio ファイルのパスを取得
         let audioPath = Bundle.main.path(forResource: message, ofType:"mp3")!
         let audioUrl = URL(fileURLWithPath: audioPath)
-        
+        print("a")
         // auido を再生するプレイヤーを作成する
         var audioError:NSError?
         do {
@@ -343,6 +341,7 @@ public class VoiceRecognizeViewController : UIViewController,
         audioPlayer.prepareToPlay()
         audioPlayer.numberOfLoops = -1
         audioPlayer.play()
+        print("b")
     }
     
     func startUpdatingVolume() {
