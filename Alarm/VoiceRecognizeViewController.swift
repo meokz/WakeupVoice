@@ -54,7 +54,7 @@ public class VoiceRecognizeViewController : UIViewController,
     @IBOutlet var recordButton : UIButton!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var sourceView: UIImageView!
-      
+
     @IBOutlet weak var Volume1: UILabel!
     @IBOutlet weak var Volume2: UILabel!
     @IBOutlet weak var Volume3: UILabel!
@@ -62,6 +62,7 @@ public class VoiceRecognizeViewController : UIViewController,
     @IBOutlet weak var Volume5: UILabel!
     @IBOutlet weak var Volume6: UILabel!
     @IBOutlet weak var VolumeBar: UILabel!
+
     @IBOutlet weak var volumeLabel : UILabel!
     
     let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "ja-JP"))!
@@ -113,7 +114,6 @@ public class VoiceRecognizeViewController : UIViewController,
         Volume5.backgroundColor = UIColor.green
         Volume6.backgroundColor = UIColor.green
         VolumeBar.backgroundColor = UIColor.black
-
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -391,12 +391,13 @@ public class VoiceRecognizeViewController : UIViewController,
         
         let audioSession = AVAudioSession.sharedInstance()
         try! audioSession.setCategory(AVAudioSessionCategoryPlayback)
-//        try! audioSession.setCategory(AVAudioSessionCategoryAmbient)
         
+        let message = voiceRecognize.soundName
+        print(message)
         // 再生する audio ファイルのパスを取得
-        let audioPath = Bundle.main.path(forResource: "bell", ofType:"mp3")!
+        let audioPath = Bundle.main.path(forResource: message, ofType:"mp3")!
         let audioUrl = URL(fileURLWithPath: audioPath)
-        
+        print("a")
         // auido を再生するプレイヤーを作成する
         var audioError:NSError?
         do {
@@ -416,6 +417,7 @@ public class VoiceRecognizeViewController : UIViewController,
         audioPlayer.prepareToPlay()
         audioPlayer.numberOfLoops = -1
         audioPlayer.play()
+        print("b")
     }
     
     func startUpdatingVolume() {
