@@ -13,4 +13,5 @@ struct VoiceRecognizeModel {
     var isRecognized : Bool = false
     var isVolume : Bool = false
     var volume : Float = 10.00
+    var soundName : String = "bell"
 }
