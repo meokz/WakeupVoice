@@ -258,6 +258,17 @@ public class VoiceRecognizeViewController : UIViewController,
     }
     
     func volumeDisplay() {
+        
+        if(voiceRecognize.isVolume == true){
+            Volume1.isHidden  = false;
+            Volume2.isHidden  = false;
+            Volume3.isHidden  = false;
+            Volume4.isHidden  = false;
+            Volume5.isHidden  = false;
+            Volume6.isHidden  = false;
+            return
+        }
+        
         if isVolumeInit == false {
             Volume1.isHidden  = true;
             Volume2.isHidden  = true;
@@ -327,7 +338,7 @@ public class VoiceRecognizeViewController : UIViewController,
             Volume4.isHidden  = false;
             Volume5.isHidden  = false;
             Volume6.isHidden  = true;
-        }else{
+        }else if (11 <= levelMeter.mPeakPower){
             Volume1.isHidden  = false;
             Volume2.isHidden  = false;
             Volume3.isHidden  = false;
@@ -335,7 +346,7 @@ public class VoiceRecognizeViewController : UIViewController,
             Volume5.isHidden  = false;
             Volume6.isHidden  = false;
         }
-        
+
     }
     
     func endRecognization() {
