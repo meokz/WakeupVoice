@@ -60,7 +60,8 @@ public class VoiceRecognizeViewController : UIViewController,
     @IBOutlet weak var Volume3: UILabel!
     @IBOutlet weak var Volume4: UILabel!
     @IBOutlet weak var Volume5: UILabel!
-      
+    @IBOutlet weak var Volume6: UILabel!
+    @IBOutlet weak var VolumeBar: UILabel!
     @IBOutlet weak var volumeLabel : UILabel!
     
     let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "ja-JP"))!
@@ -110,6 +111,9 @@ public class VoiceRecognizeViewController : UIViewController,
         Volume3.backgroundColor = UIColor.green
         Volume4.backgroundColor = UIColor.green
         Volume5.backgroundColor = UIColor.green
+        Volume6.backgroundColor = UIColor.green
+        VolumeBar.backgroundColor = UIColor.black
+
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -255,6 +259,12 @@ public class VoiceRecognizeViewController : UIViewController,
     
     func volumeDisplay() {
         if isVolumeInit == false {
+            Volume1.isHidden  = true;
+            Volume2.isHidden  = true;
+            Volume3.isHidden  = true;
+            Volume4.isHidden  = true;
+            Volume5.isHidden  = true;
+            Volume6.isHidden  = true;
             return
         }
         
@@ -265,12 +275,67 @@ public class VoiceRecognizeViewController : UIViewController,
                               &levelMeter, &propertySize)
         
         // Show the audio channel's peak and average RMS power.
-        self.volumeLabel.text = "".appendingFormat("%.2f", levelMeter.mPeakPower)
+//        self.volumeLabel.text = "".appendingFormat("%.2f", levelMeter.mPeakPower)
+        
+        // levelMeter.mPeakPower -40〜40
+        // 1以上ならOK
 //        self.averageTextField.text = "".appendingFormat("%.2f", levelMeter.mAveragePower)
         
         if levelMeter.mPeakPower > voiceRecognize.volume {
             voiceRecognize.isVolume = true
         }
+//        print("levelMeter" + levelMeter.mPeakPower.description)
+        if(levelMeter.mPeakPower <= -40){
+            Volume1.isHidden  = true;
+            Volume2.isHidden  = true;
+            Volume3.isHidden  = true;
+            Volume4.isHidden  = true;
+            Volume5.isHidden  = true;
+            Volume6.isHidden  = true;
+        }else if (-39 <= levelMeter.mPeakPower && levelMeter.mPeakPower <= -30){
+            Volume1.isHidden  = false;
+            Volume2.isHidden  = true;
+            Volume3.isHidden  = true;
+            Volume4.isHidden  = true;
+            Volume5.isHidden  = true;
+            Volume6.isHidden  = true;
+        }else if(-29 <= levelMeter.mPeakPower && levelMeter.mPeakPower <= -20){
+            Volume1.isHidden  = false;
+            Volume2.isHidden  = false;
+            Volume3.isHidden  = true;
+            Volume4.isHidden  = true;
+            Volume5.isHidden  = true;
+            Volume6.isHidden  = true;
+        }else if(-19 <= levelMeter.mPeakPower && levelMeter.mPeakPower <= -10){
+            Volume1.isHidden  = false;
+            Volume2.isHidden  = false;
+            Volume3.isHidden  = false;
+            Volume4.isHidden  = true;
+            Volume5.isHidden  = true;
+            Volume6.isHidden  = true;
+        }else if(-9 <= levelMeter.mPeakPower && levelMeter.mPeakPower <= 0){
+            Volume1.isHidden  = false;
+            Volume2.isHidden  = false;
+            Volume3.isHidden  = false;
+            Volume4.isHidden  = false;
+            Volume5.isHidden  = true;
+            Volume6.isHidden  = true;
+        }else if(1 <= levelMeter.mPeakPower && levelMeter.mPeakPower <= 10){
+            Volume1.isHidden  = false;
+            Volume2.isHidden  = false;
+            Volume3.isHidden  = false;
+            Volume4.isHidden  = false;
+            Volume5.isHidden  = false;
+            Volume6.isHidden  = true;
+        }else{
+            Volume1.isHidden  = false;
+            Volume2.isHidden  = false;
+            Volume3.isHidden  = false;
+            Volume4.isHidden  = false;
+            Volume5.isHidden  = false;
+            Volume6.isHidden  = false;
+        }
+        
     }
     
     func endRecognization() {
@@ -382,6 +447,7 @@ public class VoiceRecognizeViewController : UIViewController,
         AudioQueueFlush(self.queue)
         AudioQueueStop(self.queue, false)
         AudioQueueDispose(self.queue, true)
+        isVolumeInit = false;
     }
 
 
